@@ -1,0 +1,91 @@
+# ============================================================================
+# Settings and idle texts for the C64 visualizer
+# Einstellungen und Leerlauf-Texte fuer den C64-Visualizer
+# ----------------------------------------------------------------------------
+# Lines starting with # are comments, empty lines are ignored.
+# Every other line is ONE scrolling text. The texts play one after another
+# while there is no sound; as soon as the C64 makes noise the visualizer runs.
+#
+# Zeilen mit # sind Kommentare, Leerzeilen werden ignoriert. Jede andere Zeile
+# ist EIN Lauftext. Die Texte laufen nacheinander, solange kein Ton anliegt;
+# sobald der C64 Toene ausgibt, laeuft der Visualizer.
+#
+# Settings / Einstellungen (optional):
+#   @silence 8000      ms without audio before the texts start (default 8000)
+#   @speed 60          scroll speed, ms per pixel (default 60, smaller = faster)
+#   @brightness 1      0..3 (default: keep the button setting)
+#   @threshold auto    audio level that counts as "sound". auto (default) = measured at power-up
+#                      (switch on in silence). Or a number, e.g. 25: raise it if the idle texts
+#                      never appear, lower it if the visualizer never starts.
+#
+# Visualizer modes / Visualizer-Modi:
+#   @cycle 20          seconds per mode in automatic switching (counts only while music plays)
+#                      Sekunden pro Modus beim automatischen Wechsel
+#   @switching auto    auto   = modes change automatically every @cycle seconds
+#                      button = modes change only on a short button press
+#                      (holding the button for 3 s toggles this until the next restart;
+#                       3 s Taster halten schaltet das bis zum naechsten Neustart um)
+#   @modes spectrum, scroller, mirror, plasma, loader, waterfall, logo, fire, raster, melody, scope, rain, starfield, life, pulse, fountain, vu
+@scroller C64 SOUND VISUALIZER - GREETINGS TO ALL SID FANS -
+@logo C64
+@driveled on
+@names manual
+#                      which modes and in which order (default: all nine)
+#                      spectrum  = bars            vu        = level meter
+#                      mirror    = centre rainbow  waterfall = spectrogram
+#                      scope     = waveform        fire      = flames
+#                      plasma    = demo plasma     starfield = stars
+#                      raster    = C64 raster bars scroller  = sine scroller
+#                      loader    = tape loader     logo      = word as equalizer
+#                      melody    = melody line     rain      = digital rain
+#                      life      = Game of Life
+#   @scroller C64 SOUND VISUALIZER - HELLO!   text of the sine scroller (Lauftext)
+#   @logo C64                                  word of the logo equalizer (short: 2-5 letters)
+#   @names manual      scroll the mode name before the mode: manual = only when switching
+#                      by button (default), always = also on automatic switches, off = never.
+#                      Modusname vor dem Modus: manual = nur bei Tasterwechsel, always = immer, off = nie
+#   @camera off        camera mode for filming: no dithering, steady LEDs on video.
+#                      Toggle with a DOUBLE press; the state is shown at every start and saved.
+#                      Kamera-Modus: Doppelklick schaltet um, Anzeige bei jedem Start.
+#   @sleep 0           matrix off after this many minutes of silence (0 = never)
+#                      Matrix nach so vielen Minuten Stille aus (0 = nie)
+#   @sleepstyle off    what the switched-off matrix shows: off | breathe | clock (Pico 2 W)
+#                      ausgeschaltet: dunkel | sanftes Atmen | Uhrzeit auf- und abblendend
+#   @sleepcolor auto   colour for breathing / clock: auto, RRGGBB or a name  /  Farbe dafür
+#   @clock on          time between the idle texts (Pico 2 W only)  /  Uhrzeit (nur Pico 2 W)
+#   @night off         e.g. 23:00-07:00: dark during these hours (Pico 2 W only)
+#   @timezone europe   europe (CET/CEST, summer time automatic), utc, +1, -5, +5:30 ...
+#   @driveled on       drive activity indicator (red, top left) from the Ultimate's
+#                      LED header; "off" hides it. Laufwerksanzeige an/aus.
+#   The 3-second toggle and the brightness are saved and survive a restart.
+#   After flashing a CHANGED texts.uf2, @switching and @brightness from here apply again.
+#   Umschaltung und Helligkeit werden gespeichert; nach dem Flashen einer GEAENDERTEN
+#   texts.uf2 gelten wieder @switching und @brightness aus dieser Datei.
+#
+# Control codes / Steuercodes (inside a text line):
+#   {color:red}        colour for the following text: red green blue yellow orange
+#                      white cyan magenta purple pink or {color:FF8000} (hex RRGGBB)
+#   {rainbow}          moving rainbow for the following text
+#   {blink}            the NEXT word stops centred and blinks 3x  ({blink:5} = 5x)
+#   {glow}             the NEXT word stops centred and glows      ({glow:5000} = 5 s)
+#   {explode}          the PREVIOUS word stops centred and explodes
+#   {hold:2000}        the PREVIOUS word stops centred for 2 s (rainbow keeps moving)
+#   {pause:800}        screen dark for 0.8 s, then the text continues
+#   {speed:40}         scroll speed from here on (ms per pixel)
+#   {typewriter}       the NEXT word stops centred and is typed letter by letter
+#   {wave} {wave:0}    letters bob up and down from here on / off again
+#   {sparkle} {sparkle:0}  white glints in the letters from here on / off again
+#   {cursor}           blinking C64 cursor block right after the previous word
+#                      e.g. {color:8080FF}{typewriter}READY{cursor}{hold:3000}
+# ============================================================================
+
+@silence 8000
+@speed 60
+@cycle 20
+@switching auto
+@modes spectrum, scroller, mirror, plasma, loader, waterfall, logo, fire, raster, melody, scope, rain, starfield, life, pulse, fountain, vu
+
+{color:8080FF}{typewriter}READY{cursor}{hold:3000}
+{color:cyan}C64 {color:white}Sound {color:magenta}Visualizer
+{color:cyan}Insert {color:yellow}Disk {color:cyan}and press {color:white}{blink:2}PLAY{hold:800}
+{rainbow}Greetings from {color:pink}{glow:2500}Sedor

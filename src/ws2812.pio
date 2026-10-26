@@ -1,0 +1,20 @@
+;
+; WS2812B driver (800 kHz), GRB, 24 bit per pixel.
+; Timing follows the well-known pico-examples PIO program.
+;
+.program ws2812
+.side_set 1
+
+.define public T1 2
+.define public T2 5
+.define public T3 3
+
+.wrap_target
+bitloop:
+    out x, 1       side 0 [T3 - 1]
+    jmp !x do_zero side 1 [T1 - 1]
+do_one:
+    jmp  bitloop   side 1 [T2 - 1]
+do_zero:
+    nop            side 0 [T2 - 1]
+.wrap

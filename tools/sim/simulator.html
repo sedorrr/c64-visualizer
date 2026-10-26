@@ -1,0 +1,160 @@
+<!DOCTYPE html><html lang=de><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C64 Sound-Visualizer – Simulator</title>
+<link rel=preconnect href="https://fonts.googleapis.com"><link rel=preconnect href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap" rel=stylesheet>
+<style>
+:root{--bg:#e9e6fb;--panel:#d8d3f6;--ink:#241b5c;--soft:#5a4fa8;--btn:#352879;--btnink:#fff;--sel:#c9a227;--bezel:#120e2e;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#352879;--panel:#2a2066;--ink:#d9d4ff;--soft:#a79ff0;--btn:#b7aff0;--btnink:#241b5c;--sel:#f0d050;--bezel:#07051a}}
+:root[data-theme="dark"]{--bg:#352879;--panel:#2a2066;--ink:#d9d4ff;--soft:#a79ff0;--btn:#b7aff0;--btnink:#241b5c;--sel:#f0d050;--bezel:#07051a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:0 auto;padding:20px 16px 40px}
+h1{font:400 clamp(18px,4.2vw,26px)/1.2 Silkscreen,ui-monospace,monospace;margin:4px 0 4px;letter-spacing:.5px}
+.lead{margin:0 0 16px;color:var(--soft);max-width:62ch}
+.bezel{background:var(--bezel);border-radius:10px;padding:14px;box-shadow:inset 0 0 0 2px #2b2266}
+canvas{width:100%;height:auto;display:block}
+h2{font-size:15px;font-weight:650;margin:22px 0 8px}
+.modes{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:6px}
+button,.file{font:inherit;font-size:15px;font-weight:600;border:0;border-radius:4px;padding:9px 10px;cursor:pointer;
+  background:var(--btn);color:var(--btnink);text-align:center}
+button[aria-pressed=true]{outline:3px solid var(--sel);outline-offset:-3px}
+button:focus-visible,.file:focus-within,input:focus-visible{outline:3px solid var(--sel);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.box{background:var(--panel);border-radius:6px;padding:12px 14px}
+.hint{font-size:14px;color:var(--soft)}
+input[type=range]{width:min(320px,100%)}
+#status{margin-top:8px;font-size:14px;color:var(--soft);min-height:1.5em}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style></head><body><main>
+<h1>C64 Sound-Visualizer</h1>
+<p class=lead>Simulator der Firmware: dieselbe Analyse und dieselben 17 Visualisierungen wie auf dem Pico, direkt im Browser.</p>
+
+<div class=bezel><canvas id=led width=1280 height=320 aria-label="Simulierte LED-Matrix 32 mal 8"></canvas></div>
+<div id=status>Wähle eine Tonquelle, um zu starten.</div>
+
+<h2>Tonquelle</h2>
+<div class="box"><div class=row>
+<button id=bdemo>Demo-Tune abspielen</button>
+<label class=file>Audiodatei wählen<input type=file id=file accept="audio/*" hidden></label>
+<button id=bmic>Mikrofon</button>
+<button id=bstop>Stopp</button></div>
+<div class=row style="margin-top:10px"><label for=gain>Eingangspegel</label><input type=range id=gain min=0.1 max=2 step=0.05 value=0.8>
+<span id=gainv class=hint></span></div>
+<div class=hint style="margin-top:6px">Der Demo-Tune ist derselbe Chiptune, den die Demo-Firmware auf dem Pico erzeugt. Eine Audiodatei kannst du auch einfach auf die Matrix ziehen.</div></div>
+
+<h2>Visualisierung</h2>
+<div class=modes id=modes></div>
+<div class=row style="margin-top:10px"><label><input type=checkbox id=auto> automatisch wechseln alle</label>
+<input type=number id=autos min=3 max=120 value=10 style="width:64px"><span>Sekunden</span></div>
+</main><script>
+const WASM_B64="__WASM__";
+const NAMES=["spectrum","vu","mirror","waterfall","scope","fire","plasma","starfield","raster","scroller","loader","logo","melody","rain","life","pulse","fountain"];
+const DE={spectrum:"Spektrum",vu:"VU-Meter",mirror:"Spiegel",waterfall:"Wasserfall",scope:"Oszilloskop",fire:"Feuer",plasma:"Plasma",
+  starfield:"Sternenfeld",raster:"Rasterbalken",scroller:"Sinus-Scroller",loader:"Ladestreifen",logo:"Logo-Equalizer",melody:"Melodie",
+  rain:"Regen",life:"Game of Life",pulse:"Beat-Puls",fountain:"Fontäne"};
+const $=id=>document.getElementById(id);
+let W,mode=0,ctx=null,src=null,timer=null,queue=[],nextT=0,ring=null,pcm=null,pcmPos=0,micNode=null,micStream=null,autoT=0;
+const HOP=256,RATE=16000,HOP_S=HOP/RATE;
+
+/* ---- WebAssembly: the firmware code ---- */
+const env={sinf:Math.sin,cosf:Math.cos,powf:Math.pow,sqrtf:Math.sqrt,log10f:Math.log10,fabsf:Math.abs,floorf:Math.floor,logf:Math.log,
+  log2f:Math.log2,fmodf:(a,b)=>a%b,expf:Math.exp,lroundf:x=>x<0?-Math.round(-x):Math.round(x)};
+/* JavaScript translation of the same code (wasm2js): used if the page may not run WebAssembly */
+__JSCORE__
+function ready(exports){W=exports;W.sim_init();buildModes();draw(new Uint32Array(256))}
+try{const bytes=Uint8Array.from(atob(WASM_B64),c=>c.charCodeAt(0));
+  WebAssembly.instantiate(bytes,{env}).then(r=>ready(r.instance.exports)).catch(()=>ready(asmFunc({...env,abort(){throw new Error("abort")}})))}
+catch(e){ready(asmFunc({...env,abort(){throw new Error("abort")}}))}
+
+/* ---- LEDs ---- */
+const cv=$("led"),g=cv.getContext("2d");
+function draw(fb){
+  g.fillStyle="#07051a";g.fillRect(0,0,cv.width,cv.height);
+  const c=cv.width/32,r=c*0.36;
+  for(let y=0;y<8;y++)for(let x=0;x<32;x++){
+    const p=fb[y*32+x],cx=(x+.5)*c,cy=(y+.5)*c;
+    g.beginPath();g.arc(cx,cy,r,0,7);
+    if(p){const col=`rgb(${p>>16&255},${p>>8&255},${p&255})`;g.shadowColor=col;g.shadowBlur=r*1.6;g.fillStyle=col}
+    else{g.shadowBlur=0;g.fillStyle="#1a1830"}
+    g.fill()}
+  g.shadowBlur=0}
+
+/* ---- modes ---- */
+function buildModes(){
+  $("modes").innerHTML=NAMES.map((n,i)=>`<button data-m=${i} aria-pressed=${i==mode}>${DE[n]}</button>`).join("");
+  $("modes").onclick=e=>{const b=e.target.closest("button");if(b)setMode(+b.dataset.m)}}
+function setMode(m){mode=m;[...$("modes").children].forEach((b,i)=>b.setAttribute("aria-pressed",i==m));autoT=0}
+
+/* ---- audio gate like the firmware: open after 160 ms of sound, closed after 300 ms of silence ---- */
+let hits=0,quiet=0,gate=true;
+function gateHop(s){let m=0;for(const v of s)m+=v;m/=s.length;let q=0;for(const v of s)q+=(v-m)*(v-m);
+  const rms=Math.max(0,Math.sqrt(q/s.length)-6);
+  if(rms>25){hits++;quiet=0}else{hits=0;quiet+=16}
+  if(hits>=10)gate=true;else if(quiet>=300)gate=false;W.sim_gate(gate?1:0)}
+
+/* ---- one 16 ms step: 256 new samples into the firmware buffer, render ---- */
+function feed(float256){                         /* float -1..1 -> 12-bit ADC values around 2048 */
+  const buf=new Uint16Array(W.memory.buffer,W.sim_samples(),512),k=+$("gain").value*1240;
+  buf.copyWithin(0,HOP);
+  for(let i=0;i<HOP;i++)buf[256+i]=Math.max(0,Math.min(4095,Math.round(2048+float256[i]*k)));
+  gateHop(buf.subarray(256))}
+function frameNow(){const p=W.sim_frame(mode);return new Uint32Array(W.memory.buffer,p,256).slice()}
+
+function stop(){clearInterval(timer);timer=null;queue=[];
+  if(src){try{src.stop()}catch(e){}src=null}
+  if(micNode){micNode.disconnect();micNode=null}
+  if(micStream){micStream.getTracks().forEach(t=>t.stop());micStream=null}
+  $("status").textContent="Gestoppt."}
+async function audio(){if(!ctx)ctx=new AudioContext();if(ctx.state!="running")await ctx.resume();return ctx}
+
+/* demo tune: generated by the firmware's synth, played and shown in sync */
+async function startDemo(){stop();await audio();W.sim_init();nextT=ctx.currentTime+0.12;
+  timer=setInterval(()=>{while(nextT<ctx.currentTime+0.2){
+      W.sim_demo_hop();
+      const s=new Uint16Array(W.memory.buffer,W.sim_samples()+512,HOP);   /* the newest 256 samples */
+      const ab=ctx.createBuffer(1,HOP,RATE),d=ab.getChannelData(0);
+      for(let i=0;i<HOP;i++)d[i]=(s[i]-2048)/2600;
+      gateHop(s);
+      const n=ctx.createBufferSource();n.buffer=ab;n.connect(ctx.destination);n.start(nextT);
+      queue.push({t:nextT,fb:frameNow()});nextT+=HOP_S}},10);
+  $("status").textContent="Demo-Tune läuft."}
+
+/* audio file: played back normally, analysed at 16 kHz in sync with the playback position */
+async function startFile(file){stop();await audio();$("status").textContent="Lade "+file.name+" …";
+  try{const dec=await ctx.decodeAudioData(await file.arrayBuffer());
+    const off=new OfflineAudioContext(1,Math.ceil(dec.duration*RATE),RATE),s=off.createBufferSource();
+    s.buffer=dec;s.connect(off.destination);s.start();pcm=(await off.startRendering()).getChannelData(0);
+    W.sim_init();src=ctx.createBufferSource();src.buffer=dec;src.loop=true;src.connect(ctx.destination);
+    const t0=ctx.currentTime+0.1;src.start(t0);pcmPos=0;nextT=t0;
+    timer=setInterval(()=>{while(nextT<ctx.currentTime+0.2){
+        const seg=new Float32Array(HOP);for(let i=0;i<HOP;i++)seg[i]=pcm[(pcmPos+i)%pcm.length];
+        pcmPos=(pcmPos+HOP)%pcm.length;feed(seg);queue.push({t:nextT,fb:frameNow()});nextT+=HOP_S}},10);
+    $("status").textContent="Spiele "+file.name+" (in Schleife)."}
+  catch(e){$("status").textContent="Die Datei ließ sich nicht abspielen. Unterstützt sind die üblichen Audioformate wie MP3, WAV oder OGG."}}
+
+/* microphone: downsampled to 16 kHz, shown immediately */
+async function startMic(){stop();await audio();
+  try{micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}})}
+  catch(e){$("status").textContent="Kein Zugriff aufs Mikrofon. Erlaube es im Browser oder nimm den Demo-Tune bzw. eine Audiodatei.";return}
+  W.sim_init();const inp=ctx.createMediaStreamSource(micStream);micNode=ctx.createScriptProcessor(1024,1,1);
+  const step=ctx.sampleRate/RATE;let frac=0,acc=[];
+  micNode.onaudioprocess=e=>{const x=e.inputBuffer.getChannelData(0);
+    for(;frac<x.length;frac+=step){acc.push(x[Math.floor(frac)]);if(acc.length==HOP){feed(Float32Array.from(acc));acc=[];queue.push({t:0,fb:frameNow()})}}
+    frac-=x.length};
+  inp.connect(micNode);micNode.connect(ctx.destination);
+  $("status").textContent="Mikrofon aktiv – spiel etwas ab oder sprich."}
+
+/* display loop: show the frame whose time has come */
+function loop(){
+  if(queue.length&&ctx){let f=null;while(queue.length&&queue[0].t<=ctx.currentTime)f=queue.shift();if(f)draw(f.fb)}
+  if($("auto").checked&&timer){autoT+=1/60;if(autoT>=Math.max(3,+$("autos").value||10))setMode((mode+1)%NAMES.length)}
+  requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+
+$("bdemo").onclick=startDemo;$("bmic").onclick=startMic;$("bstop").onclick=stop;
+$("file").onchange=e=>{if(e.target.files[0])startFile(e.target.files[0])};
+const showGain=()=>$("gainv").textContent=Math.round(+$("gain").value*100)+" %";$("gain").oninput=showGain;showGain();
+cv.ondragover=e=>e.preventDefault();cv.ondrop=e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f)startFile(f)};
+</script></body></html>

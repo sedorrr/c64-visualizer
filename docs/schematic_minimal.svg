@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="1080" viewBox="0 0 1180 1080">
+<rect width="1180" height="1080" fill="#ffffff"/>
+<text x="590.0" y="32" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="21" text-anchor="middle" font-weight="bold" fill="#1a1a1a">Minimal wiring  /  Pico 2 or Pico 2 W</text>
+<text x="590.0" y="54" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="middle" font-weight="normal" fill="#1a1a1a">USB power, no level shifter. Signal = blue, +5 V = red, 3.3 V = violet, GND = black. Dashed = optional.</text>
+<rect x="470" y="90" width="270" height="780" rx="8" fill="#eef4ff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="605.0" y="118" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="16" text-anchor="middle" font-weight="bold" fill="#1a1a1a">Raspberry Pi Pico 2 / 2 W</text>
+<text x="605.0" y="136" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="normal" fill="#1a1a1a">USB-powered (5 V / 2 A charger)</text>
+<circle cx="470" cy="180" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="482" y="184" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="normal" fill="#1a1a1a">ADC_VREF  (pin 35)</text>
+<circle cx="470" cy="310" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="482" y="314" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="normal" fill="#1a1a1a">GP26 · ADC0  (pin 31)</text>
+<circle cx="470" cy="510" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="482" y="514" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="normal" fill="#1a1a1a">GP27 · ADC1  (pin 32)</text>
+<circle cx="470" cy="630" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="482" y="634" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="normal" fill="#1a1a1a">AGND  (pin 33)</text>
+<circle cx="470" cy="720" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="482" y="724" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="normal" fill="#1a1a1a">GP15  (pin 20)</text>
+<circle cx="470" cy="800" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="482" y="804" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="normal" fill="#1a1a1a">GP14  (pin 19)</text>
+<circle cx="740" cy="180" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="728" y="184" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" font-weight="normal" fill="#1a1a1a">GP16  (pin 21)</text>
+<circle cx="740" cy="260" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="728" y="264" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" font-weight="normal" fill="#1a1a1a">VBUS +5 V  (pin 40)</text>
+<circle cx="740" cy="300" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="728" y="304" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" font-weight="normal" fill="#1a1a1a">GND  (pin 23)</text>
+<circle cx="740" cy="520" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="728" y="524" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" font-weight="normal" fill="#1a1a1a">3V3 OUT  (pin 36)</text>
+<circle cx="740" cy="580" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="728" y="584" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" font-weight="normal" fill="#1a1a1a">GND  (pin 38)</text>
+<circle cx="740" cy="650" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="728" y="654" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" font-weight="normal" fill="#1a1a1a">GP5 · I2C0 SCL  (pin 7)</text>
+<circle cx="740" cy="710" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="728" y="714" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" font-weight="normal" fill="#1a1a1a">GP4 · I2C0 SDA  (pin 6)</text>
+<polyline points="465,180 430,180" fill="none" stroke="#c0392b" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="430.0,180 422.0,170 351.2,170 351.2,190 422.0,190 430.0,180" fill="#fff" stroke="#c0392b" stroke-width="1.8"/>
+<text x="386.59999999999997" y="184" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="bold" fill="#c0392b">ADC_VREF</text>
+<polyline points="465,630 430,630" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="430.0,630 422.0,620 381.6,620 381.6,640 422.0,640 430.0,630" fill="#fff" stroke="#1a1a1a" stroke-width="1.8"/>
+<text x="401.8" y="634" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="bold" fill="#1a1a1a">AGND</text>
+<text x="30" y="270" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" text-anchor="start" font-weight="bold" fill="#1a1a1a">C64 AUDIO (left)</text>
+<text x="30" y="288" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="start" font-weight="normal" fill="#1a1a1a">A/V port pin 3 or Line-Out L</text>
+<circle cx="40" cy="310" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<polyline points="45,310 165,310" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="165,296 165,324" fill="none" stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="175,296 175,324" fill="none" stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="170" y="342" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" text-anchor="middle" font-weight="bold" fill="#1a1a1a">C1</text>
+<text x="170" y="358" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="middle" font-weight="normal" fill="#1a1a1a">100 nF – 1 µF</text>
+<polyline points="175,310 300,310" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="300" cy="310" r="4" fill="#1f5fbf"/>
+<polyline points="300,310 465,310" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="300,230 300,248.0" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="300,292.0 300,310" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="291" y="248.0" width="18" height="44" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="285" y="267.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" text-anchor="end" font-weight="bold" fill="#1a1a1a">R1</text>
+<text x="285" y="284.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" font-weight="normal" fill="#1a1a1a">100 kΩ</text>
+<polyline points="300,230 330,230" fill="none" stroke="#c0392b" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="330,230 338,220 408.8,220 408.8,240 338,240 330,230" fill="#fff" stroke="#c0392b" stroke-width="1.8"/>
+<text x="373.4" y="234" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="bold" fill="#c0392b">ADC_VREF</text>
+<polyline points="300,310 300,328.0" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="300,372.0 300,390" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="291" y="328.0" width="18" height="44" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="285" y="347.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" text-anchor="end" font-weight="bold" fill="#1a1a1a">R2</text>
+<text x="285" y="364.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" font-weight="normal" fill="#1a1a1a">100 kΩ</text>
+<polyline points="300,390 330,390" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="330,390 338,380 378.4,380 378.4,400 338,400 330,390" fill="#fff" stroke="#1a1a1a" stroke-width="1.8"/>
+<text x="358.2" y="394" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="bold" fill="#1a1a1a">AGND</text>
+<text x="458" y="302" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10.5" text-anchor="end" font-weight="normal" fill="#1f5fbf"></text>
+<text x="30" y="470" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" text-anchor="start" font-weight="bold" fill="#1a1a1a">AUDIO right (optional, stereo)</text>
+<text x="30" y="488" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="start" font-weight="normal" fill="#1a1a1a">Line-Out R  ·  setting @stereo on</text>
+<circle cx="40" cy="510" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<polyline points="45,510 165,510" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="165,496 165,524" fill="none" stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="175,496 175,524" fill="none" stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="170" y="542" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" text-anchor="middle" font-weight="bold" fill="#1a1a1a">C2</text>
+<text x="170" y="558" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="middle" font-weight="normal" fill="#1a1a1a">100 nF – 1 µF</text>
+<polyline points="175,510 300,510" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="300" cy="510" r="4" fill="#1f5fbf"/>
+<polyline points="300,510 465,510" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="300,430 300,448.0" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="300,492.0 300,510" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="291" y="448.0" width="18" height="44" fill="#fff" stroke="#1a1a1a" stroke-width="2" stroke-dasharray="5,4"/>
+<text x="285" y="467.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" text-anchor="end" font-weight="bold" fill="#1a1a1a">R3</text>
+<text x="285" y="484.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" font-weight="normal" fill="#1a1a1a">100 kΩ</text>
+<polyline points="300,430 330,430" fill="none" stroke="#c0392b" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="330,430 338,420 408.8,420 408.8,440 338,440 330,430" fill="#fff" stroke="#c0392b" stroke-width="1.8"/>
+<text x="373.4" y="434" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="bold" fill="#c0392b">ADC_VREF</text>
+<polyline points="300,510 300,528.0" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="300,572.0 300,590" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="291" y="528.0" width="18" height="44" fill="#fff" stroke="#1a1a1a" stroke-width="2" stroke-dasharray="5,4"/>
+<text x="285" y="547.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" text-anchor="end" font-weight="bold" fill="#1a1a1a">R4</text>
+<text x="285" y="564.0" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="end" font-weight="normal" fill="#1a1a1a">100 kΩ</text>
+<polyline points="300,590 330,590" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="330,590 338,580 378.4,580 378.4,600 338,600 330,590" fill="#fff" stroke="#1a1a1a" stroke-width="1.8"/>
+<text x="358.2" y="594" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="bold" fill="#1a1a1a">AGND</text>
+<text x="458" y="502" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10.5" text-anchor="end" font-weight="normal" fill="#1f5fbf"></text>
+<text x="30" y="622" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="start" font-weight="bold" fill="#1a1a1a">C64 GND (A/V pin 2 / cable shield)</text>
+<circle cx="40" cy="640" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<polyline points="45,640 100,640" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="100,640 108,630 148.4,630 148.4,650 108,650 100,640" fill="#fff" stroke="#1a1a1a" stroke-width="1.8"/>
+<text x="128.2" y="644" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="bold" fill="#1a1a1a">AGND</text>
+<rect x="30" y="692" width="240" height="50" rx="8" fill="#f2f2f2" stroke="#1a1a1a" stroke-width="2" stroke-dasharray="7,5"/>
+<text x="150" y="712" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#1a1a1a">Button (optional)</text>
+<text x="150" y="730" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle" font-weight="normal" fill="#1a1a1a">or a jumper wire to GND</text>
+<polyline points="270,720 465,720" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="150,742 150,750" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="150,750 150,758" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="136,758 164,758" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="141,764 159,764" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="146,770 154,770" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="30" y="792" width="240" height="74" rx="8" fill="#f7f2fb" stroke="#1a1a1a" stroke-width="2" stroke-dasharray="7,5"/>
+<text x="150" y="812" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#1a1a1a">Ultimate LED header (optional)</text>
+<text x="262" y="834" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10.5" text-anchor="end" font-weight="normal" fill="#1a1a1a">drive activity pin</text>
+<text x="262" y="856" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10.5" text-anchor="end" font-weight="normal" fill="#1a1a1a">header GND</text>
+<circle cx="270" cy="830" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<circle cx="270" cy="852" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<polyline points="275,830 320,830 320,800" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="320,800 370.5,800" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="414.5,800 465,800" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="370.5" y="791" width="44" height="18" fill="#fff" stroke="#1a1a1a" stroke-width="2" stroke-dasharray="5,4"/>
+<text x="392.5" y="784" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" text-anchor="middle" font-weight="bold" fill="#1a1a1a">R5</text>
+<text x="392.5" y="828" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="middle" font-weight="normal" fill="#1a1a1a">1 kΩ</text>
+<polyline points="275,852 300,852 300,862" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="300,862 300,870" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="286,870 314,870" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="291,876 309,876" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="296,882 304,882" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="745,180 900,180" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="830" y="171" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10.5" text-anchor="middle" font-weight="normal" fill="#1f5fbf">data (short wire)</text>
+<rect x="900" y="130" width="240" height="200" rx="8" fill="#eaf7ee" stroke="#1a1a1a" stroke-width="2"/>
+<text x="1020" y="156" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="13" text-anchor="middle" font-weight="bold" fill="#1a1a1a">WS2812B 8x32 panel</text>
+<text x="1020" y="226" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10.5" text-anchor="middle" font-weight="normal" fill="#1a1a1a">(power at the DIN end)</text>
+<circle cx="900" cy="180" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="912" y="184" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#1a1a1a">DIN</text>
+<circle cx="900" cy="260" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="912" y="264" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#c0392b">+5V</text>
+<circle cx="900" cy="300" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="912" y="304" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#1a1a1a">GND</text>
+<polyline points="745,260 895,260" fill="none" stroke="#c0392b" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="745,300 895,300" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="900" y="460" width="240" height="290" rx="8" fill="#fbf7ea" stroke="#1a1a1a" stroke-width="2" stroke-dasharray="7,5"/>
+<text x="1020" y="484" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12.5" text-anchor="middle" font-weight="bold" fill="#1a1a1a">VEML7700 light sensor (optional)</text>
+<text x="1020" y="502" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10.5" text-anchor="middle" font-weight="normal" fill="#1a1a1a">I2C address 0x10</text>
+<circle cx="900" cy="520" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="912" y="524" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#1a1a1a">VIN</text>
+<circle cx="900" cy="550" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="912" y="554" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#1a1a1a">3Vo</text>
+<circle cx="900" cy="580" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="912" y="584" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#1a1a1a">GND</text>
+<circle cx="900" cy="650" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="912" y="654" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#1a1a1a">SCL</text>
+<circle cx="900" cy="710" r="5" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="912" y="714" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#1a1a1a">SDA</text>
+<polyline points="745,520 895,520" fill="none" stroke="#7d3c98" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="745,580 895,580" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="745,650 895,650" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="745,710 895,710" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-dasharray="7,5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="888,544 876,556" fill="none" stroke="#c0392b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="876,544 888,556" fill="none" stroke="#c0392b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="870" y="554" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="10.5" text-anchor="end" font-weight="normal" fill="#c0392b">not connected</text>
+<text x="30" y="920" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11.5" text-anchor="start" font-weight="normal" fill="#1a1a1a">1) Power only via the Pico's USB: use a 2 A phone charger, not a PC port. Firmware *_usb-350mA.uf2.</text>
+<text x="30" y="942" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11.5" text-anchor="start" font-weight="normal" fill="#1a1a1a">2) No level shifter: 3.3 V data usually works on a short wire. If the panel flickers, add the 74AHCT125 from the full schematic.</text>
+<text x="30" y="964" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11.5" text-anchor="start" font-weight="normal" fill="#1a1a1a">3) Bias resistors to ADC_VREF (35) and AGND (33), C64 GND to AGND: supply noise cancels out. Panel GND to another GND pin.</text>
+<text x="30" y="986" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11.5" text-anchor="start" font-weight="normal" fill="#1a1a1a">4) Pico 2 W with the Ultimate's audio stream: both audio inputs may stay unconnected (the stream carries left and right).</text>
+<text x="30" y="1008" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11.5" text-anchor="start" font-weight="normal" fill="#1a1a1a">5) Drive LED: measure first - up to 3.6 V: 1 kΩ as shown; about 5 V: 10 kΩ in series + 20 kΩ from GP14 to GND.</text>
+<text x="30" y="1030" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11.5" text-anchor="start" font-weight="normal" fill="#1a1a1a">6) Light sensor: VIN to 3V3 OUT (36) or to GP3 (pin 5, firmware drives it to 3.3 V), never to 5 V; leave 3Vo open. Settings @light, @lightmin.</text>
+<text x="30" y="1052" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="11.5" text-anchor="start" font-weight="normal" fill="#1a1a1a">7) Right channel without a second wire on 35/33 (plug-in only): upper 100 kΩ to GP28 (34), lower to a free GND pin (e.g. 28, not 38 = sensor); @stereo on drives GP28 to 3.3 V.</text>
+</svg>

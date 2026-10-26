@@ -1,0 +1,8 @@
+build/
+tests/host/build/
+tests/web/fixtures/c_records.bin
+tools/sim/sim.wasm
+tools/sim/sim_wasm2js.js
+__pycache__/
+.DS_Store
+tests/web/*.png

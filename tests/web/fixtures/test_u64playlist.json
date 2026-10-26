@@ -1,0 +1,10 @@
+{
+  "format": "ultimate64_sid_player_shared_playlist",
+  "version": 1,
+  "name": "Testliste",
+  "songs": [
+    { "md5": "00000000000000000000000000000001", "filename": "Commando.sid", "title": "Commando", "author": "Rob Hubbard" },
+    { "md5": "00000000000000000000000000000002", "filename": "Monty_on_the_Run.sid", "title": "Monty on the Run", "author": "Rob Hubbard" },
+    { "md5": "00000000000000000000000000000003", "filename": "Fehlt_am_Stick.sid", "title": "Fehlt", "author": "Niemand" }
+  ]
+}

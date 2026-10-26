@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>C64-Ökosystem – Anleitung</title>
+<!-- Source of docs/Anleitung_C64-Oekosystem.pdf - build with: python3 tools/make_anleitung.py [--shots] [--copy] -->
+<style>
+  @page { size: A4; }
+  :root { --ink: #1d1b2e; --muted: #5d5a78; --accent: #4b3fb5; --soft: #efedfb; --line: #d6d3ec; --warn: #9a5b00; }
+  * { box-sizing: border-box; }
+  body { font: 10.5pt/1.45 "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); background: #fff; margin: 0; }
+  h1 { font-size: 26pt; margin: 0 0 4pt; color: var(--accent); letter-spacing: -0.5pt; }
+  h2 { font-size: 16pt; color: var(--accent); margin: 0 0 8pt; padding-bottom: 3pt; border-bottom: 2px solid var(--line);
+       break-before: page; }
+  h3 { font-size: 12pt; margin: 10pt 0 3pt; break-after: avoid; }
+  p, li { margin: 0 0 5pt; }
+  ul, ol { padding-left: 16pt; margin: 0 0 6pt; }
+  code, .k { font-family: Menlo, Consolas, monospace; font-size: 9pt; background: var(--soft); padding: 0 3pt; border-radius: 3px; }
+  table { border-collapse: collapse; width: 100%; margin: 4pt 0 8pt; font-size: 9.5pt; break-inside: avoid; }
+  th, td { text-align: left; vertical-align: top; padding: 3pt 6pt; border-bottom: 1px solid var(--line); }
+  th { background: var(--soft); }
+  .box { background: var(--soft); border-left: 4px solid var(--accent); padding: 6pt 10pt; margin: 6pt 0 10pt; break-inside: avoid; }
+  .warn { border-left-color: #d08a00; background: #fff6e5; }
+  .shots { display: flex; gap: 10pt; align-items: flex-start; margin: 6pt 0 10pt; break-inside: avoid; }
+  figure { margin: 0; break-inside: avoid; }
+  figure img { display: block; width: 100%; border: 1px solid var(--line); border-radius: 6px; }
+  figcaption { font-size: 8.5pt; color: var(--muted); margin-top: 3pt; }
+  .phone { width: 58mm; flex: 0 0 auto; }
+  .wide { width: 100%; margin: 6pt 0 10pt; }
+  .side { flex: 1; }
+  .cover { padding-top: 6mm; }
+  h2.nb { break-before: auto; margin-top: 18pt; }
+  .cover .sub { font-size: 14pt; color: var(--muted); margin-bottom: 18pt; }
+  .cover .trio { display: flex; gap: 8pt; margin: 14pt 0; }
+  .cover .trio figure { flex: 1; }
+  .cover .trio img { height: 52mm; object-fit: cover; }
+  .toc { columns: 2; font-size: 10pt; margin-top: 10pt; }
+  .toc a { color: var(--ink); text-decoration: none; }
+  .small { font-size: 8.5pt; color: var(--muted); }
+  svg text { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <h1>C64-Ökosystem</h1>
+  <div class="sub">Visualizer, Audio-Empfänger und Raspberry-Pi-Jukebox zusammen betreiben – Einrichtung, Verkettung,
+    Bedienung und Besonderheiten</div>
+  <div class="trio">
+    <figure><img src="bilder/viz_modi.png" alt=""><figcaption>Visualizer: Lichtshow auf einer 8 × 32-LED-Matrix</figcaption></figure>
+  </div>
+  <div class="trio">
+    <figure><img src="bilder/audio_gehaeuse.png" alt=""><figcaption>Audio-Empfänger für die Stereoanlage</figcaption></figure>
+    <figure><img src="bilder/pi_gehaeuse.png" alt=""><figcaption>Pi-Jukebox im „Brotkasten“ mit 2,8″-Display</figcaption></figure>
+  </div>
+  <div class="toc">
+    <div>1 · <a href="#ueberblick">Überblick</a></div>
+    <div>2 · <a href="#grundregeln">Das Wichtigste vorab</a></div>
+    <div>3 · <a href="#einrichten">Jedes Gerät einrichten</a></div>
+    <div>4 · <a href="#verketten">Geräte verketten</a></div>
+    <div>5 · <a href="#bedienung">Bedienung</a></div>
+    <div>6 · <a href="#besonderheiten">Besonderheiten</a></div>
+    <div>7 · <a href="#fehlersuche">Fehlersuche</a></div>
+    <div>8 · <a href="#hinweise">Hinweise und Lizenz</a></div>
+  </div>
+  <p class="small" style="margin-top:16pt">Diese Anleitung fasst zusammen, wie die drei Projekte zusammenspielen. Jedes
+    Gerät hat zusätzlich ein ausführliches Handbuch – in seiner Weboberfläche im Tab <b>Hilfe</b> und als
+    <code>docs/HANDBUCH.md</code> im jeweiligen Projekt. Die Bilder der Weboberflächen zeigen Beispieldaten.</p>
+</section>
+
+<h2 id="ueberblick">1 · Überblick</h2>
+<p>Ein <b>Ultimate 64</b> (Elite, Elite II) oder <b>C64 Ultimate</b> kann den Ton des C64 als <b>Audio-Stream</b> ins
+  Netzwerk schicken – rund 250 Pakete pro Sekunde, Stereo, 48 kHz. Drei selbst gebaute Geräte nutzen diesen Stream:</p>
+<table>
+  <tr><th style="width:24%">Gerät</th><th>Was es macht</th><th style="width:20%">Erreichbar unter</th></tr>
+  <tr><td><b>Visualizer</b><br><span class="small">Raspberry Pi Pico 2 W + WS2812B-Matrix 8 × 32</span></td>
+    <td>Macht aus dem Ton eine Lichtshow (17 Modi). Ohne Musik zeigt er Lauftexte, die Uhrzeit, Titel der Jukebox und
+      Retro-News. Ton über den Stream oder über einen analogen Eingang.</td><td><code>c64viz.local</code></td></tr>
+  <tr><td><b>Audio-Empfänger</b><br><span class="small">Pico 2 W + DAC-Modul PCM5102A</span></td>
+    <td>Spielt den Stream an der Stereoanlage ab – ohne Kabel vom C64 zur Anlage, mit Jitter-Puffer und Taktnachführung.</td>
+    <td><code>c64audio.local</code></td></tr>
+  <tr><td><b>Pi-Jukebox</b><br><span class="small">Raspberry Pi 3B (oder neuer)</span></td>
+    <td>SID-Jukebox für das Ultimate (Dateien vom NAS, FTP, USB-Stick), Bedienung am Handy, Bild am Fernseher – und
+      <b>Stream-Verteiler</b>: holt den Stream über das Netzwerkkabel und reicht ihn an alle Picos weiter.</td>
+    <td><code>c64pi.local</code></td></tr>
+</table>
+<p>Keines der Geräte ist Pflicht: Ein Visualizer läuft allein am Ultimate, ebenso ein Audio-Empfänger. Erst wenn
+  mehrere Geräte denselben Ton bekommen sollen, kommt es auf die <a href="#verketten">Verkettung</a> an.</p>
+<div class="shots">
+  <figure class="side"><img src="bilder/viz_gehaeuse.png" alt=""><figcaption>Gehäuseteile des Visualizers (3D-Druck,
+    Dateien im Ordner <code>case/</code> jedes Projekts)</figcaption></figure>
+  <figure class="side"><img src="bilder/pi_hdmi_titlecard.png" alt=""><figcaption>Die Pi-Jukebox am Fernseher: Effekt
+    mit „Jetzt läuft“-Karte</figcaption></figure>
+</div>
+<p>Den Aufbau der Hardware (Schaltpläne, Stückliste, Gehäuse) beschreiben die <code>README_DE.md</code> der drei
+  Projekte. Fertige Firmware-Dateien liegen jeweils im Ordner <code>firmware/</code>.</p>
+
+<h2 id="grundregeln">2 · Das Wichtigste vorab</h2>
+<div class="box"><b>Das Ultimate streamt immer nur an ein einziges Ziel.</b> Fordert ein zweites Gerät den Stream an,
+  nimmt es ihn dem ersten weg – beide wechseln sich dann ab. Sollen mehrere Geräte den Ton bekommen, holt ihn <b>eines</b>
+  und reicht ihn weiter: entweder der Pi an alle (Variante A) oder jedes Gerät an das nächste (Variante B).</div>
+<table>
+  <tr><th style="width:32%">Regel</th><th>Warum</th></tr>
+  <tr><td>Beim Ultimate immer die <b>Ethernet-Adresse</b> eintragen</td>
+    <td>Die Ultimates senden den Stream nur über das Netzwerkkabel. Die Netzwerksuche der Geräte nimmt automatisch
+      die richtige Adresse.</td></tr>
+  <tr><td><b>Unicast</b> statt Multicast</td>
+    <td>Multicast macht viele WLAN-Router langsam: Webseite und Jukebox der Picos sind dann kaum erreichbar. Unicast und
+      Weiterleiten laufen dagegen flüssig (je Glied 250 Pakete/s, Ping ~2 ms).</td></tr>
+  <tr><td>Picos ins <b>2,4-GHz-WLAN</b></td><td>Der Pico 2 W kennt kein 5 GHz.</td></tr>
+  <tr><td>Jedem Gerät einen <b>eigenen Namen</b> geben</td>
+    <td>Zwei Visualizer heißen sonst beide <code>c64viz</code> (der zweite weicht auf <code>c64viz-2</code> aus). Mit
+      festen Namen wie <code>c64viz2</code> findet die Weiterleitung ihr Ziel zuverlässig.</td></tr>
+  <tr><td>Startpasswort <code>commodore64</code> ändern</td>
+    <td>Gilt für alle drei Weboberflächen und die eigenen WLANs der Geräte. Den <b>Benutzernamen</b> fragt der Browser
+      bei den Picos auch ab – er ist beliebig.</td></tr>
+</table>
+<h3>Die drei Empfangs-Arten eines Pico</h3>
+<table>
+  <tr><th style="width:32%">Einstellung beim Pico</th><th>Wann</th></tr>
+  <tr><td><b>nur dieser Pico (Unicast)</b></td><td>Der Pico holt den Stream selbst beim Ultimate. Für das
+    <b>erste</b> Gerät einer Kette oder ein einzelnes Gerät.</td></tr>
+  <tr><td><b>von einem anderen Pico weitergeleitet</b><br><span class="small">beim Empfänger: Haken „Stream kommt
+    weitergeleitet“</span></td><td>Der Pico fragt das Ultimate <b>nie</b> selbst, sondern wartet auf Pakete vom Pi
+    oder vom Gerät davor. Für alle Geräte hinter dem ersten – und für alle Picos, die der Pi beliefert.</td></tr>
+  <tr><td>mehrere Geräte gleichzeitig (Multicast)</td><td>Nur im Ausnahmefall, siehe oben.</td></tr>
+</table>
+
+<h2 id="einrichten">3 · Jedes Gerät einrichten</h2>
+<h3>Visualizer und Audio-Empfänger (Pico 2 W)</h3>
+<ol>
+  <li><b>Firmware aufspielen:</b> BOOTSEL-Taste am Pico halten, USB einstecken, die passende <code>.uf2</code> aus
+    <code>firmware/</code> auf das erscheinende Laufwerk kopieren (Visualizer:
+    <code>c64viz_wifi_ws2812_usb-350mA.uf2</code> bzw. <code>…_psu-1500mA.uf2</code> mit Netzteil; Empfänger:
+    <code>c64audio.uf2</code>). Beim eingebauten Visualizer geht es auch mit dem Modustaster statt BOOTSEL.</li>
+  <li><b>Eigenes WLAN des Pico:</b> Ohne Einstellungen öffnet er einen Zugangspunkt – <code>C64-Visualizer</code> bzw.
+    <code>C64-Audio</code>, Passwort <code>commodore64</code>. Mit dem Handy verbinden und
+    <b>http://192.168.4.1</b> öffnen (hier ohne Passwortabfrage).</li>
+  <li><b>Heim-WLAN eintragen</b> (Visualizer: Tab „WLAN &amp; Ultimate“, Empfänger: Tab „Einstellungen“): WLAN-Name und
+    -Passwort, einen <b>Gerätenamen</b>, ein eigenes Web-Passwort und das Ultimate („Netzwerk nach Ultimates
+    durchsuchen“ findet es). „Speichern und neu starten“.</li>
+  <li>Der Pico verbindet sich und ist danach unter <code>http://&lt;Gerätename&gt;.local</code> erreichbar. Die Matrix
+    des Visualizers lässt Adresse und Namen durchlaufen, z. B. „WLAN 192.168.1.231 c64viz.local“.</li>
+</ol>
+<h3>Pi-Jukebox</h3>
+<ol>
+  <li>Mit dem <b>Raspberry Pi Imager</b> „Raspberry Pi OS Lite (64-bit)“ auf eine microSD-Karte schreiben; in den
+    Einstellungen Rechnername <code>c64pi</code>, Benutzer und Passwort festlegen und SSH einschalten.</li>
+  <li>Pi mit <b>Netzwerkkabel</b> anschließen (der Verteiler arbeitet über Kabel am zuverlässigsten).</li>
+  <li>Per SSH auf dem Pi (<code>ssh &lt;benutzer&gt;@c64pi.local</code>) das Projekt holen und installieren:
+    <code>sudo apt install -y git</code>, <code>git clone https://github.com/sedorrr/c64-pi-jukebox</code>,
+    <code>cd c64-pi-jukebox</code>, <code>sudo ./install/install.sh</code>. Alternativ vom Mac/Linux-PC aus im
+    Projektordner: <code>./install/deploy.sh &lt;benutzer&gt;@c64pi.local</code>.</li>
+  <li><b>http://c64pi.local/</b> öffnen, mit <code>commodore64</code> anmelden, unter Einstellungen das Passwort
+    ändern. Im Tab <b>Geräte</b> das Ultimate eintragen („Im Netz suchen“) und speichern.</li>
+</ol>
+<div class="box">Ohne Kabel und ohne bekanntes WLAN öffnet auch der Pi ein eigenes WLAN (<code>C64-Jukebox</code>,
+  Passwort <code>commodore64</code>, Seite meist unter <code>http://192.168.5.1/</code>) – er weicht dabei den
+  Adressen der Picos aus.</div>
+
+<h2 id="verketten">4 · Geräte verketten</h2>
+<p>Es gibt zwei Wege, denselben Ton zu mehreren Geräten zu bringen. Beide laufen flüssig; man wählt <b>einen</b>.</p>
+<svg viewBox="0 0 640 230" width="100%" role="img" aria-label="Variante A und B">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M0,0 L10,5 L0,10 z" fill="#4b3fb5"/></marker></defs>
+  <style>.b{fill:#efedfb;stroke:#4b3fb5;stroke-width:1.5} .u{fill:#fff6e5;stroke:#d08a00;stroke-width:1.5}
+    .t{font-size:12px;fill:#1d1b2e;text-anchor:middle} .s{font-size:9.5px;fill:#5d5a78;text-anchor:middle}
+    .h{font-size:13px;font-weight:bold;fill:#4b3fb5} .l{stroke:#4b3fb5;stroke-width:1.6;fill:none;marker-end:url(#ar)}
+    .d{stroke-dasharray:5 3}</style>
+  <text class="h" x="10" y="18">A · mit Pi als Verteiler</text>
+  <rect class="u" x="10" y="90" width="90" height="44" rx="8"/><text class="t" x="55" y="110">Ultimate</text><text class="s" x="55" y="125">Ethernet</text>
+  <rect class="b" x="130" y="90" width="90" height="44" rx="8"/><text class="t" x="175" y="110">Pi-Jukebox</text><text class="s" x="175" y="125">c64pi</text>
+  <rect class="b" x="250" y="34" width="70" height="38" rx="8"/><text class="t" x="285" y="52">Empfänger</text><text class="s" x="285" y="65">c64audio</text>
+  <rect class="b" x="250" y="93" width="70" height="38" rx="8"/><text class="t" x="285" y="111">Visualizer</text><text class="s" x="285" y="124">c64viz</text>
+  <rect class="b" x="250" y="152" width="70" height="38" rx="8"/><text class="t" x="285" y="170">Visualizer</text><text class="s" x="285" y="183">c64viz2</text>
+  <path class="l" d="M100,112 L128,112"/>
+  <path class="l" d="M220,104 C235,90 235,60 248,55"/><path class="l" d="M220,112 L248,112"/><path class="l" d="M220,120 C235,134 235,166 248,170"/>
+  <text class="s" x="175" y="215">Kabel zum Pi · WLAN zu den Picos</text>
+  <line x1="340" y1="10" x2="340" y2="220" stroke="#d6d3ec"/>
+  <text class="h" x="352" y="18">B · Kette ohne Pi</text>
+  <rect class="u" x="352" y="90" width="64" height="44" rx="8"/><text class="t" x="384" y="110">Ultimate</text><text class="s" x="384" y="125">Ethernet</text>
+  <rect class="b" x="432" y="93" width="62" height="38" rx="8"/><text class="t" x="463" y="111">Empfänger</text><text class="s" x="463" y="124">Unicast</text>
+  <rect class="b" x="508" y="93" width="58" height="38" rx="8"/><text class="t" x="537" y="111">c64viz</text><text class="s" x="537" y="124">weitergel.</text>
+  <rect class="b" x="578" y="93" width="58" height="38" rx="8"/><text class="t" x="607" y="111">c64viz2</text><text class="s" x="607" y="124">weitergel.</text>
+  <path class="l" d="M416,112 L430,112"/><path class="l" d="M494,112 L506,112"/><path class="l" d="M566,112 L576,112"/>
+  <text class="s" x="494" y="160">jedes Gerät reicht jedes Paket</text><text class="s" x="494" y="173">unverändert an das nächste weiter</text>
+  <text class="s" x="494" y="215">Einrichten mit dem Einricht-Assistenten</text>
+</svg>
+<table>
+  <tr><th></th><th>A · Pi als Verteiler</th><th>B · Kette ohne Pi</th></tr>
+  <tr><td>Wer holt den Stream?</td><td>der Pi (über Kabel)</td><td>das erste Gerät der Kette</td></tr>
+  <tr><td>Fällt ein Gerät aus …</td><td>… bekommen die anderen weiter Ton; nur der Pi ist zentral</td>
+    <td>… bekommen die Geräte <i>dahinter</i> nichts mehr</td></tr>
+  <tr><td>Titel und Retro-News</td><td>vom Pi an alle Picos</td><td>Titel der PC-Jukebox wandern die Kette entlang</td></tr>
+  <tr><td>Einrichten</td><td>Liste der Picos im Pi, jeder Pico auf „weitergeleitet“</td><td>Einricht-Assistent eines Visualizers</td></tr>
+</table>
+
+<h3>Variante A: der Pi verteilt an alle</h3>
+<div class="shots">
+  <figure class="phone"><img src="bilder/pi_geraete.png" alt=""><figcaption>Pi, Tab „Geräte“: Verteiler an, drei
+    Picos, darunter der Weg des Tons</figcaption></figure>
+  <div class="side">
+    <p><b>Am Pi</b> (Tab <b>Geräte</b>):</p>
+    <ol>
+      <li>Unter <b>Ultimates</b> das Ultimate mit seiner Kabeladresse eintragen und als <b>aktiv</b> markieren.</li>
+      <li>Unter <b>Picos und Stream-Verteiler</b> alle Picos eintragen (<code>c64audio.local</code>,
+        <code>c64viz.local</code> …) – oder ganz unten bei „Geräte im Netz“ auf <b>als Pico eintragen</b> tippen.
+        Je Pico: <b>Titel per UDP</b> und Haken <b>Stream</b>. Speichern.</li>
+      <li>Haken <b>Audio-Stream vom Ultimate zum Pi holen und an die Picos weiterreichen</b> setzen. Auf Wunsch auch
+        <b>Retro-News an die Picos schicken</b>.</li>
+    </ol>
+    <p><b>An jedem Visualizer</b> (Tab „WLAN &amp; Ultimate“): „Audio-Stream vom Ultimate verwenden“ an, Empfänger
+      <b>„von einem anderen Pico weitergeleitet“</b>, „Stream weiterleiten an“ <b>leer</b>. Speichern und neu starten.</p>
+    <p><b>Am Audio-Empfänger</b> (Tab „Einstellungen“): Haken <b>„Stream kommt weitergeleitet“</b> setzen und die
+      Weiterleitung an den Visualizer ausschalten – der Pi beliefert ja alle direkt.</p>
+    <p><b>Kontrolle:</b> Der Kasten unter dem Haken zeigt „Stream kommt: 251 Pakete/s“ und je Pico etwa 250/s. Unter
+      „Geräte im Netz“ (auf dem Pi und auf jedem Pico) steht der Weg des Tons als Baum:<br>
+      <span class="small">Elite II → c64pi 251/s → [c64audio 251/s, c64viz 251/s, c64viz2 250/s]</span></p>
+    <div class="box warn">Steht ein Pico noch auf <b>Unicast</b>, holt er sich den Stream selbst beim Ultimate und nimmt
+      ihn damit dem Pi weg. Dann flackern die Zahlen zwischen den Geräten hin und her.</div>
+  </div>
+</div>
+<p>Mischformen gehen auch: Der Pi beliefert nur den Audio-Empfänger, der reicht an den Visualizer weiter usw. Ein Pico,
+  der den Stream von zwei Seiten bekäme, nimmt den ersten Absender und verwirft den zweiten.</p>
+
+<h3>Variante B: Kette ohne Pi – mit dem Einricht-Assistenten</h3>
+<p>Jeder Visualizer hat einen <b>Einricht-Assistenten</b> (Tab „Steuerung“, Karte „Geräte im Netz“, Knopf
+  „Einricht-Assistent: Geräte verketten“). Er findet alle Picos im Netz und stellt sie der Reihe nach ein:</p>
+<div class="shots">
+  <figure class="phone"><img src="bilder/viz_assistent3.png" alt=""><figcaption>Schritt 3: Reihenfolge – ein
+    Audio-Empfänger steht immer vorne</figcaption></figure>
+  <figure class="phone"><img src="bilder/viz_assistent5.png" alt=""><figcaption>Schritt 5: Prüfen – der Ton kommt
+    überall an</figcaption></figure>
+  <div class="side">
+    <ol>
+      <li><b>Geräte</b> anhaken, die mitmachen.</li>
+      <li><b>Ultimate</b> wählen.</li>
+      <li><b>Reihenfolge</b> festlegen (▲▼).</li>
+      <li><b>Einstellen:</b> „Bei … einstellen“ öffnet die Seite jedes Geräts mit den Werten schon eingetragen (gelb
+        markiert). Dort mit dem Passwort <i>dieses</i> Geräts anmelden, prüfen, speichern. Ein Haken erscheint, sobald
+        sich das Gerät mit den neuen Werten meldet.</li>
+      <li><b>Prüfen:</b> Pakete pro Sekunde bei jedem Gerät, vom richtigen Vorgänger.</li>
+    </ol>
+  </div>
+</div>
+<p>Was der Assistent einstellt, lässt sich auch von Hand eintragen:</p>
+<div class="shots">
+  <figure class="phone"><img src="bilder/audio_weiterleitung.png" alt=""><figcaption>Empfänger als erstes Glied:
+    holt selbst, reicht an <code>c64viz.local</code> weiter</figcaption></figure>
+  <figure class="phone"><img src="bilder/viz_wlan.png" alt=""><figcaption>Visualizer in der Mitte: weitergeleitet,
+    reicht an <code>c64viz2.local</code> weiter</figcaption></figure>
+  <div class="side">
+    <table>
+      <tr><th>Gerät</th><th>Einstellung</th></tr>
+      <tr><td>erstes Glied</td><td>Stream an, <b>Unicast</b> (Empfänger: Haken „weitergeleitet“ <b>aus</b>),
+        Weiterleitung an das nächste</td></tr>
+      <tr><td>jedes weitere</td><td>Stream an, <b>„von einem anderen Pico weitergeleitet“</b>, Weiterleitung an das
+        nächste</td></tr>
+      <tr><td>letztes</td><td>wie davor, Weiterleitung <b>leer</b></td></tr>
+      <tr><td>alle</td><td>dasselbe Ultimate eintragen (für Jukebox und SID-Adressen)</td></tr>
+    </table>
+    <p class="small">Damit Titelmeldungen der PC-Jukebox auch über den Audio-Empfänger ankommen, dort das Web-Passwort
+      des ersten Visualizers eintragen.</p>
+  </div>
+</div>
+<div class="shots">
+  <figure class="phone"><img src="bilder/viz_steuerung.png" alt=""><figcaption>Visualizer, Tab „Steuerung“:
+    Statuskasten und „Geräte im Netz“ mit dem Weg des Tons</figcaption></figure>
+  <div class="side">
+    <h3 style="margin-top:0">Kontrolle: „Geräte im Netz“</h3>
+    <p>Jeder Pico und der Pi melden sich alle 10 s im Heimnetz. Die Karte <b>Geräte im Netz</b> zeigt auf jedem Gerät
+      dieselbe Übersicht:</p>
+    <ul>
+      <li><b>Weg des Tons</b>, z. B. „Elite II → c64audio 250/s → c64viz 250/s → c64viz2 249/s“. Bekommt ein
+        Weiterleitungsziel nichts, steht es rot am Ende.</li>
+      <li>Je Gerät: Name (Klick öffnet seine Seite), Adresse, Firmware-Stand, von wem es den Stream bekommt und wohin es
+        weiterleitet.</li>
+      <li><b>Warnungen</b>, z. B. eine Weiterleitung, die nicht läuft, weil beim Gerät der Stream aus ist, oder ein
+        Name, der im Netz nicht zu finden ist.</li>
+    </ul>
+    <p>Rund 250 Pakete pro Sekunde bei jedem Gerät heißt: alles in Ordnung. Deutlich weniger deutet auf Multicast
+      oder ein schwaches WLAN hin.</p>
+    <p class="small">Bei Variante A verzweigt der Weg am Pi, z. B. „Elite II → c64pi 251/s → [c64audio 251/s,
+      c64viz 251/s, c64viz2 250/s]“ – auf jedem Gerät gleich.</p>
+  </div>
+</div>
+
+<h2 id="bedienung">5 · Bedienung</h2>
+<h3>Pi-Jukebox: Musik auswählen und abspielen</h3>
+<div class="shots">
+  <figure class="phone"><img src="bilder/pi_dateien.png" alt=""><figcaption>Tab „Dateien“: Ordner durchklicken,
+    filtern, antippen spielt</figcaption></figure>
+  <figure class="phone"><img src="bilder/pi_wiedergabe.png" alt=""><figcaption>Tab „Wiedergabe“: laufender Titel,
+    Unterlied, Wiedergabeliste</figcaption></figure>
+  <div class="side">
+    <ul>
+      <li><b>Quellen:</b> Netzwerkfreigabe (NAS, Windows, Mac), FTP-Server, USB-Stick am Ultimate oder am Pi.</li>
+      <li><b>Abspielen:</b> Titel antippen; „Ordner abspielen“ nimmt alle Unterordner mit. Zufall, Liste wiederholen,
+        Wiedergabelisten speichern.</li>
+      <li><b>Titelwechsel</b> genau am Ende mit der Songlängen-Datei der HVSC, sonst nach Zeitlimit oder Stille.</li>
+      <li><b>Knöpfe:</b> ⏮ Anfang/voriger Titel · ▶/❚❚ Pause (Ultimate wird angehalten) · ⏹ Stopp (Ultimate wird
+        zurückgesetzt) · ⏭ nächster Titel.</li>
+      <li>Die Jukebox spielt selbstständig weiter, auch ohne offene Seite.</li>
+      <li>Am Handy: Seite „Zum Home-Bildschirm“ hinzufügen – sie öffnet sich dann wie eine App.</li>
+    </ul>
+    <figure><img src="bilder/pi_tft_play.png" alt="" style="width:62%"><figcaption>Optionales 2,8″-Display am Pi</figcaption></figure>
+  </div>
+</div>
+<p>Am <b>Fernseher</b> (HDMI) zeigt der Pi Effekte zur Musik, die SID-Stimmen, eine Diashow oder das Bild des C64,
+  dazu Titel und Spielzeit; bedienbar auch mit der Fernbedienung des Fernsehers (HDMI-CEC). Einstellungen im Tab 📺.</p>
+<div class="shots">
+  <figure class="side"><img src="bilder/pi_hdmi_bars.png" alt=""><figcaption>Effekt „Balken“ am Fernseher</figcaption></figure>
+  <figure class="side"><img src="bilder/pi_hdmi_news.png" alt=""><figcaption>Retro-News als Karte am Fernseher</figcaption></figure>
+</div>
+
+<h3>Visualizer</h3>
+<div class="shots">
+  <figure class="phone"><img src="bilder/viz_lauftexte.png" alt=""><figcaption>Tab „Lauftexte“ mit Vorschau, so wie
+    der Text auf der Matrix läuft</figcaption></figure>
+  <div class="side">
+    <p>Musik startet die Lichtshow von selbst; nach einigen Sekunden Stille laufen die Lauftexte, auf Wunsch mit Uhr.
+      Bedienen lässt er sich am <b>Taster</b> oder auf der Webseite (Tab „Steuerung“, gleiche Funktionen):</p>
+    <table>
+      <tr><th>Taster</th><th>Wirkung</th></tr>
+      <tr><td>kurz</td><td>nächster Modus</td></tr>
+      <tr><td>zweimal kurz</td><td>Kamera-Modus an/aus</td></tr>
+      <tr><td>dreimal kurz</td><td>Rauschen neu messen (vorher Musik anhalten)</td></tr>
+      <tr><td>0,7–3 s halten</td><td>Helligkeit 7 → 20 → 45 → 100 %</td></tr>
+      <tr><td>länger als 3 s</td><td>automatischer Moduswechsel oder nur per Taster</td></tr>
+      <tr><td>beim Einstecken halten</td><td>USB-Laufwerk zum Aufspielen einer Firmware</td></tr>
+    </table>
+    <p><b>Lauftexte</b> bekommen Farben und Effekte (Regenbogen, Glühen, Explosion, C64-Cursor …) per Knopfdruck;
+      „Speichern“ genügt. Weitere Einstellungen (Stille-Zeit, Schlaf, Nachtstunden, Stereo, zwei Matrizen,
+      Lichtsensor) stehen im Tab „Einstellungen“.</p>
+    <p>Die <b>SID-Jukebox</b> des Visualizers spielt auch ohne Pi Dateien vom USB-Stick am Ultimate oder vom PC.
+      Läuft die Pi-Jukebox, zeigt der Visualizer deren Titel.</p>
+  </div>
+</div>
+
+<h3>Audio-Empfänger</h3>
+<div class="shots">
+  <figure class="phone"><img src="bilder/audio_wiedergabe.png" alt=""><figcaption>Tab „Wiedergabe“: Start/Stopp,
+    Quelle, Lautstärke</figcaption></figure>
+  <div class="side">
+    <ul>
+      <li><b>Start / Stopp</b> und <b>Lautstärke</b> auf der Seite – oder am optionalen Taster: kurz = Start/Stopp,
+        1 s halten = nächste Quelle. Lautstärke, Quelle und Start/Stopp bleiben nach dem Ausschalten erhalten.</li>
+      <li>Der Empfänger puffert etwa 80 ms und regelt seinen Takt nach dem Ultimate (rund 47 983 Hz); ein fehlendes
+        Paket wird überbrückt statt zu knacken.</li>
+      <li>Kommen trotzdem Aussetzer (Zähler „Leergelaufen“), hilft ein größerer Puffer unter „Einstellungen“.</li>
+      <li>Vor dem ersten Ton die Lautstärke an der Anlage niedrig stellen.</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="besonderheiten">6 · Besonderheiten</h2>
+<h3>Titel und Retro-News auf der Matrix</h3>
+<ul>
+  <li>Die Pi-Jukebox schickt zu jedem Titel Name, Komponist, Länge, Unterlied und SID-Adressen an die Picos. Die
+    Matrix zeigt den Titel, eine schwache Linie unten den Fortschritt; ein Stück mit 2 SIDs schaltet auf Stereo.</li>
+  <li><b>Titel per UDP</b> (ohne Passwort) kommt nur bei Picos an, die ihren Stream vom Pi bekommen. Für alle anderen
+    im Pi <b>Titel per Webseite</b> wählen und das Web-Passwort des Pico eintragen.</li>
+  <li><b>Retro-News:</b> Der Pi holt alle 30 Minuten Schlagzeilen aus öffentlichen RSS-Feeds (Indie Retro News,
+    amiga-news.de, Commodore News, Cascade64, The Oasis BBS …). Die Visualizer zeigen im Leerlauf nach jedem Lauftext
+    eine in Gelb, z. B. „+++ Neue Demo +++“. Abschalten: am Pi den Haken entfernen oder einzelne Feeds abwählen; an
+    einem einzelnen Visualizer <code>@news off</code> (Einstellung „Retro-News“).</li>
+</ul>
+<h3>Wenn ein Gerät fehlt</h3>
+<ul>
+  <li>Bleibt der Stream aus, schaltet der Visualizer nach 0,25 s auf seinen <b>analogen Eingang</b> um (falls
+    angeschlossen).</li>
+  <li>Ein Pico auf „weitergeleitet“ fragt das Ultimate nie selbst. Ist der Pi (Variante A) oder das Gerät davor
+    (Variante B) aus, bleibt er ohne Stream.</li>
+  <li>Ausnahme in Variante B: Steht der erste Visualizer hinter dem Empfänger auf <b>Unicast</b>, holt er sich den Ton
+    selbst, wenn der Empfänger aus ist – und gibt ihn zurück, sobald der Empfänger wieder läuft.</li>
+  <li>Startet ein anderes Programm (z. B. am PC) einen Stream, nimmt es ihn dem Pi bzw. dem ersten Pico weg; die holen
+    ihn sich zurück, sobald das Programm aufhört.</li>
+</ul>
+<h3>Mehrere Ultimates</h3>
+<p>Alle Geräte kennen bis zu vier Ultimates (der Pi bis zu acht) und eine <b>Quelle</b>. Am Visualizer wird sie im
+  Tab „Steuerung“ gewechselt (nicht, solange seine Jukebox spielt), am Empfänger unter „Wiedergabe“, am Pi unter
+  „Geräte“ (aktiv). Bei Variante A genügt es, die Quelle am Pi zu wechseln. Ein Ultimate mit Netzwerk-Passwort
+  antwortet der Netzwerksuche nicht – dann von Hand eintragen.</p>
+<h3>Zwei Matrizen als ein Bild</h3>
+<p>Zwei Visualizer nebeneinander zeigen auf Wunsch ein Bild mit 64 × 8 Punkten (Tab „Einstellungen“ → „Zwei Matrizen
+  als ein Bild“). Einer rechnet das ganze Bild und schickt dem Partner seine Hälfte – am besten der, der den Stream
+  ohnehin bekommt.</p>
+<h3>Ohne Router: Party-Modus des Pi</h3>
+<p>Unterwegs spannt der Pi selbst ein WLAN auf – unter Name und Passwort des Heim-WLANs. Picos und Handys verbinden
+  sich dann wie zu Hause, das Ultimate kommt per Kabel direkt an den Pi (Einstellungen → Party-Modus).</p>
+<h3>Updates</h3>
+<ul>
+  <li><b>Picos:</b> Tab „WLAN &amp; Ultimate“ (Empfänger: „System“) → „Firmware (.uf2) wählen …“. Alle Picos auf einmal:
+    <code>python3 tools/update_all.py</code> im Visualizer-Projekt. Einstellungen und Texte bleiben erhalten.</li>
+  <li><b>Pi:</b> neuen Projektordner kopieren und <code>install.sh</code> bzw. <code>deploy.sh</code> erneut aufrufen;
+    Einstellungen und Listen bleiben.</li>
+  <li><b>Sicherung:</b> jedes Gerät kann alle Einstellungen als eine Datei herunterladen und wieder einspielen.</li>
+</ul>
+
+<h2 id="fehlersuche" class="nb">7 · Fehlersuche</h2>
+<table>
+  <tr><th style="width:36%">Was man sieht</th><th>Ursache und Abhilfe</th></tr>
+  <tr><td>Zwei Geräte bekommen abwechselnd Ton</td><td>Beide holen den Stream selbst. Alle Geräte außer dem ersten
+    (bzw. alle Picos bei Variante A) auf <b>„weitergeleitet“</b> stellen.</td></tr>
+  <tr><td>„wartet auf weitergeleiteten Stream“</td><td>Beim Gerät davor fehlt die Weiterleitung, dort ist der Stream
+    aus – oder (Variante A) der Pico steht nicht in der Liste des Pi bzw. der Haken „Stream“ fehlt.</td></tr>
+  <tr><td>„Name wird gesucht …“, „Name nicht gefunden“</td><td>Gerät aus, anderer Name oder in einem anderen WLAN.
+    Notfalls die IP-Adresse statt des Namens eintragen.</td></tr>
+  <tr><td>Deutlich weniger als 250 Pakete/s, Webseite träge</td><td>Irgendwo ist noch Multicast eingestellt, oder
+    das WLAN ist schwach. Überall Unicast bzw. „weitergeleitet“ wählen.</td></tr>
+  <tr><td>Kein Stream, obwohl alles eingetragen ist</td><td>WLAN-Adresse des Ultimate eingetragen statt der
+    Ethernet-Adresse; oder im Ultimate ist die Web-Fernsteuerung (Network → Web Remote Control) aus.</td></tr>
+  <tr><td>Pi: „… Pakete von &lt;Adresse&gt; verworfen“</td><td>Das Ultimate schickt über eine Adresse, die im Pi nicht
+    eingetragen ist (meist seine WLAN-Adresse). Kabeladresse eintragen.</td></tr>
+  <tr><td>Titel erscheinen nicht auf der Matrix</td><td>Pico bekommt den Stream nicht vom Pi → im Pi „Titel per
+    Webseite“ mit dem Passwort des Pico wählen.</td></tr>
+  <tr><td>Pico landet im eigenen WLAN (C64-Visualizer / C64-Audio)</td><td>Heim-WLAN nicht gefunden oder Passwort
+    falsch. Er versucht es alle 5 Minuten erneut; Daten über http://192.168.4.1 korrigieren.</td></tr>
+  <tr><td>Passwort vergessen</td><td>Picos: <code>wlan_reset.uf2</code> aufspielen (löscht nur WLAN, Ultimate und
+    Passwort). Pi: per SSH zurücksetzen, siehe Pi-Handbuch.</td></tr>
+</table>
+<p>Jedes Gerät hat ein <b>Diagnose-Protokoll</b> (Visualizer: „WLAN &amp; Ultimate“ → Diagnose laden, Empfänger:
+  „System“). Die ausführlichen Fehlersuche-Kapitel stehen in den Handbüchern (Tab „Hilfe“).</p>
+
+<h2 id="hinweise" class="nb">8 · Hinweise und Lizenz</h2>
+<ul>
+  <li><b>Nur fürs Heimnetz.</b> Die Weboberflächen laufen über HTTP ohne Verschlüsselung. Stream, Titel, Retro-News,
+    Gerätemeldungen und das Bild für zwei Matrizen gehen per UDP <b>ohne Anmeldung</b> – jedes Gerät im selben Netz
+    kann sie senden. Die Geräte nicht aus dem Internet erreichbar machen (keine Portweiterleitung) und nicht in fremden
+    oder öffentlichen Netzen betreiben.</li>
+  <li><b>Auf eigene Gefahr.</b> Eingriffe am C64 oder Ultimate, der Aufbau der Geräte und die Stromversorgung der
+    LED-Matrix (bis zu mehrere Ampere bei voller Helligkeit) geschehen auf eigenes Risiko. Für Schäden an Geräten,
+    Hardware oder Daten wird keine Haftung übernommen.</li>
+  <li><b>Retro-News</b> zeigen nur Schlagzeilen mit Quellenangabe; die Inhalte gehören den jeweiligen Seiten.</li>
+  <li>Getestet ist nur mit der Hardware und dem Heimnetz des Autors (Pico 2 W, WS2812B 8 × 32, PCM5102A, Raspberry Pi
+    3B, Ultimate 64 Elite II). Andere Router und Ultimate-Firmwares können sich anders verhalten.</li>
+</ul>
+<p><b>Lizenz:</b> Copyright © 2026 Sedor (der-sedor.de). Alle drei Projekte sind freie Software unter der
+  <b>GNU General Public License, Version 3</b> (Datei <code>LICENSE</code>), ohne jede Gewährleistung. Fremdkomponenten
+  und ihre Lizenzen: <code>THIRD_PARTY_NOTICES.md</code> im jeweiligen Projekt.
+  <span class="small">„Commodore“, „C64“, „SID“ und „Ultimate 64“ / „C64 Ultimate“ sind Marken ihrer jeweiligen Inhaber.
+  Diese Projekte stehen in keiner Verbindung zu ihnen.</span></p>
+
+</body>
+</html>
